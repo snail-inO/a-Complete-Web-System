@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.multi.common.returns.Json;
 import com.multi.common.returns.exception.CustomException;
 import com.multi.common.returns.exception.ExceptionEnum;
+import com.multi.common.utils.CURDUtil;
 import com.multi.log.aop.Logging;
 import com.multi.sys.bean.Menu;
 import com.multi.sys.mapper.MenuMapper;
@@ -25,10 +26,6 @@ public class MenuController {
     @Autowired
     private MenuMapper menuMapper;
     private Menu menu;
-    private static final int CREATE = 0;
-    private static final int UPDATE = 1;
-    private static final int RETRIEVE = 2;
-    private static final int DELETE = 3;
 
     @Logging
     @PostMapping("/menu/curd")
@@ -91,35 +88,25 @@ public class MenuController {
         int methodInt = Integer.parseInt(method);
         long menuIdInt = Integer.parseInt(menuId);
         Menu input = null;
-        if (methodInt == CREATE || methodInt == UPDATE) {
-            input = JSON.parseObject(getBody(req), Menu.class);
+        if (methodInt == CURDUtil.CREATE || methodInt == CURDUtil.UPDATE) {
+            input = JSON.parseObject(CURDUtil.getBody(req), Menu.class);
         }
 
         switch (methodInt) {
-            case CREATE:
+            case CURDUtil.CREATE:
                 menuMapper.insertMenu(input);
                 break;
-            case UPDATE:
+            case CURDUtil.UPDATE:
                 menuMapper.updateMenu(input);
                 break;
-            case RETRIEVE:
+            case CURDUtil.RETRIEVE:
                 menu = menuMapper.selectMenuById(menuIdInt);
                 break;
-            case DELETE:
+            case CURDUtil.DELETE:
                 menuMapper.deleteMenuById(menuIdInt);
                 break;
             default:
                 throw new CustomException(ExceptionEnum.BAD_REQUEST);
         }
-    }
-    private String getBody(HttpServletRequest req) throws IOException {
-        int len = req.getContentLength();
-        byte[] buffer = new byte[len];
-        ServletInputStream in = req.getInputStream();
-
-        in.read(buffer, 0, len);
-        in.close();
-
-        return new String(buffer, StandardCharsets.UTF_8);
     }
 }
