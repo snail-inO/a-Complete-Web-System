@@ -42,6 +42,6 @@ Develop Common moudle
 
 ### Sprint 5
 
-- Implement CURD, export, paging for sys_dept table
-- Implement CURD, export, paging for sys_dict table
-- Implement CURD, paging for sys_dict_detail table
+- Implement CRUD, export, paging for sys_dept table
+- Implement CRUD, export, paging for sys_dict table
+- Implement CRUD, paging for sys_dict_detail table
